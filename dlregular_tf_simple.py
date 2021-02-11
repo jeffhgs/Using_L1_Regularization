@@ -14,15 +14,7 @@ def run_train():
 
     # Prepare the training dataset.
     batch_size = 64
-    (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
-    x_train = np.reshape(x_train, (-1, 784))
-    x_test = np.reshape(x_test, (-1, 784))
-
-    # Reserve 10,000 samples for validation.
-    x_val = x_train[-10000:]
-    y_val = y_train[-10000:]
-    x_train = x_train[:-10000]
-    y_train = y_train[:-10000]
+    x_train, x_val, y_train, y_val = setup_mnist_data()
 
     # Prepare the training dataset.
     train_dataset = tf.data.Dataset.from_tensor_slices((x_train, y_train))
@@ -67,6 +59,18 @@ def run_train():
                     % (step, float(loss_value))
                 )
                 print("Seen so far: %s samples" % ((step + 1) * 64))
+
+
+def setup_mnist_data():
+    (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
+    x_train = np.reshape(x_train, (-1, 784))
+    x_test = np.reshape(x_test, (-1, 784))
+    # Reserve 10,000 samples for validation.
+    x_val = x_train[-10000:]
+    y_val = y_train[-10000:]
+    x_train = x_train[:-10000]
+    y_train = y_train[:-10000]
+    return x_train, x_val, y_train, y_val
 
 
 def build_model():
