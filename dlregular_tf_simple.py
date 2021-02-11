@@ -4,8 +4,8 @@ from tensorflow.keras import layers
 import numpy as np
 
 
-def run_train():
-    model, outputs, x1, x2 = build_model()
+def run_train(options):
+    model, outputs, x1, x2 = build_model(options)
 
     # Instantiate an optimizer.
     optimizer = keras.optimizers.SGD(learning_rate=1e-3)
@@ -73,7 +73,7 @@ def setup_mnist_data():
     return x_train, x_val, y_train, y_val
 
 
-def build_model():
+def build_model(options):
     inputs = keras.Input(shape=(784,), name="digits")
     x1 = layers.Dense(64, activation="relu")(inputs)
     x2 = layers.Dense(64, activation="relu")(x1)
@@ -81,9 +81,16 @@ def build_model():
     model = keras.Model(inputs=inputs, outputs=outputs)
     return model, outputs, x1, x2
 
+def parse_options():
+    import argparse
+    import sys
+    parser = argparse.ArgumentParser()
+    options = parser.parse_args(sys.argv[1:])
+    return options
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    run_train()
+    options = parse_options()
+    run_train(options)
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
